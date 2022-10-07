@@ -1,0 +1,1456 @@
+@import 'config';
+
+// CUSTOM USER STYLES & IMPORTS
+
+.wrapper {
+    position: relative;
+    z-index: 30;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100vh;
+    overflow: hidden;
+    // background-color: #fff;
+    transition: background-color $navigation-time;
+
+    .wrapper__inner {
+        background-color: #fff;
+        transition: transform $navigation-time;
+        min-height: 100vh;
+    }
+
+    @include media-breakpoint-down(md) {
+        @at-root body.toggle & {
+            background-color: transparent;
+            .wrapper__inner {
+                box-shadow: -20px 0 50px rgba(#000, .15);
+                transform: scale(.8) translateX($navigation-width + 20px);
+                transform-origin: right;
+                z-index: 10;
+                user-select: none;
+                pointer-events: none;
+                > *:not(.header) {
+                    opacity: .5;
+                }
+            }
+            .header {
+                pointer-events: all;
+            }
+        }
+    }
+}
+
+/// HELPERS ///
+.fade {
+  transition: opacity .15s linear;
+}
+
+.modal-open {
+  overflow: hidden;
+}
+
+// Modal background
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 98;
+  width: 100vw;
+  height: 100vh;
+  background-color: $modal-backdrop-bg;
+
+  // Fade for backdrop
+  &.fade { opacity: 0; }
+  &.show { opacity: $modal-backdrop-opacity; }
+}
+
+/// COMPONENTS ///
+
+// Logo
+.logo {
+    display: flex;
+    align-items: center;
+    font-size: 17.5px;
+    font-weight: 900;
+    text-transform: uppercase;
+    user-select: none;
+
+    &,
+    &:hover,
+    &:active,
+    &:focus {
+        color: $accent;
+    }
+
+    &__icon {
+        margin-right: 5px;
+        width: 42px;
+        height: 26px;
+    }
+}
+
+// BUTTONS
+@mixin button-bg($bg, $color: white) {
+    background: $bg;
+    border-color: $bg;
+    color: $color;
+    &:hover,
+    &:active,
+    &:focus {
+        color: $color;
+    }
+    &:hover {
+        background:darken($bg,8%);
+        border-color:darken($bg,8%);
+        transition: all 0.3s ease;
+    }
+    &:active {
+        background:darken($bg,15%);
+        border-color:darken($bg,15%);
+    }
+}
+
+.btn {
+    border-width: 2px;
+    border-style: solid;
+    display: inline-block;
+    text-align: center;
+    padding: 9px 15px;
+    border-radius: 50px;
+    font-family: $poppins;
+    font-size: 16px;
+    max-width: 100%;
+    width: 325px;
+    user-select: none;
+    &:hover,
+    &:active,
+    &:focus {
+        text-decoration: none;
+    }
+}
+
+a.btn.disabled, fieldset:disabled a.btn {
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+.btn.disabled, .btn:disabled {
+    color: #fff;
+    background-color: #bbb;
+    border-color: #bbb;
+}
+
+.btn-sm {
+    font-weight: 600;
+    font-size: 15px;
+    padding: 7px 10px;
+    max-width: 100%;
+    width: 109px;
+}
+
+.btn-xs {
+    font-weight: 400;
+    font-size: 13px;
+    padding: 3px 7px;
+    max-width: 100%;
+    width: 103px;
+
+    b, strong {
+        font-weight: 600;
+    }
+}
+
+.btn-red {
+   @include button-bg($accent);
+}
+
+.btn-green {
+    @include button-bg(#54d237);
+}
+
+.btn-blue {
+  @include button-bg(#4d6ee4);
+  border-color: transparent;
+  /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#3359e1+0,4d6ee4+100 */
+  background: rgb(51,89,225); /* Old browsers */
+  background: linear-gradient(45deg,  rgba(51,89,225,1) 0%,rgba(77,110,228,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+}
+
+.btn-white {
+    @include button-bg(white, #5a68e2);
+}
+
+// Should be placed after colored bg variants
+.btn-o {
+    background-color: transparent;
+}
+
+// Labels
+.label {
+    display: inline-block;
+    padding: 10px 15px;
+    font-size: 13px;
+    line-height: 1;
+    color: #42444f;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25em;
+    user-select: none;
+
+    &-default {
+      background: #edf0fc;
+    }
+    &-white {
+      background: #fff;
+      box-shadow: 0 0 18px rgba(0,0,0,.08);
+    }
+}
+
+// Progress
+.progress {
+    display: flex;
+    height: 100%;
+    overflow: hidden;
+    font-size: .75rem;
+    background-color: #d6d6d6;
+
+    &-bar {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        color: #fff;
+        text-align: center;
+        background-color: #4d6ee4;
+        transition: width .6s ease;
+    }
+}
+
+// Nav
+.nav {
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+
+    & > li:not(:last-child) {
+        margin-right: 10px;
+    }
+
+    &__count {
+        display: inline-block;
+        border-radius: 2px;
+        background: #fff;
+        color: #3359e1;
+        font-size: 13px;
+        font-weight: 500;
+        padding-left: 6px;
+        padding-right: 6px;
+        margin-left: auto;
+    }
+}
+
+.persons-slider {
+    position: relative;
+    max-width: 770px;
+    margin: 0 auto;
+
+    @include media-breakpoint-up (sm) {
+      margin-top: 20px;
+    }
+
+    &__arrow {
+        position: absolute;
+        top: 25%;
+        height: 103px;
+        width: 46px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #fff;
+        border-radius: 4px;
+        box-shadow: 0 0 25px rgba(#000, .07);
+        z-index: 2;
+        transition: .3s;
+
+        &:hover {
+            opacity: .8;
+        }
+
+        &--prev {
+            left: -15px;
+            transform: translateX(-100%);
+        }
+        &--next {
+            right: -15px;
+            transform: translateX(100%);
+        }
+    }
+}
+
+// Person
+.person {
+    // max-height: 420px;
+
+    .label,
+    .enter-page__smalltitle {
+      font-size: 12px;
+    }
+
+    .enter-page__smalltitle {
+      margin-bottom: 3px;
+    }
+
+    &__col-left {
+      @include media-breakpoint-up(lg) {
+        flex: 0 0 58%;
+        max-width: 58%;
+      }
+    }
+
+    &__col-right {
+      @include media-breakpoint-up(lg) {
+        flex: 0 0 42%;
+        max-width: 42%;
+      }
+    }
+
+    &__img {
+        user-select: none;
+
+        @include media-breakpoint-up(sm) {
+            // min-height: 400px;
+            // height: 50vh;
+            // max-height: 600px;
+        }
+    }
+
+    &__body {
+        position: relative;
+        border-radius: 8px;
+        overflow: hidden;
+        // color: white;
+        margin-bottom: 15px;
+
+
+        @include media-breakpoint-up(lg) {
+          border: 1px solid #7c93e6;
+          box-shadow: 0 12px 30px rgba(#0d2783, .08);
+          padding: 20px;
+        }
+    }
+
+    &__content {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 26px 36px;
+        z-index: 2;
+    }
+
+    &__labels {
+        text-align: center;
+        text-transform: capitalize;
+        line-height: 1.2;
+    }
+}
+
+// User
+.user {
+    text-align: center;
+    margin-bottom: 20px;
+    &__avatar {
+        height: 136px;
+        width: 136px;
+        border-radius: 50%;
+        overflow: hidden;
+        box-shadow: 0 20px 50px rgba(#000, .05);
+        margin-bottom: 15px;
+        margin-left: auto;
+        margin-right: auto;
+        user-select: none;
+    }
+    &__name {
+        font-size: 20px;
+        font-weight: 700;
+        color: #14204f;
+        margin-bottom: 0;
+        line-height: 1.2;
+    }
+    &--inverse {
+        .user__name {
+            color: #fff;
+        }
+    }
+}
+
+// User Data
+.user-data {
+    $border-color: #d1d3d5;
+
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 296px;
+    border-bottom: 1px solid $border-color;
+    &__item {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        color: #42444f;
+        text-align: center;
+        line-height: 1.4;
+        flex: 0 0 50%;
+        max-width: 50%;
+        padding: 15px;
+        min-height: 148px;
+        border-top: 1px solid $border-color;
+        height: 148px;
+
+
+        &:nth-child(even) {
+            border-left: 1px solid $border-color;
+        }
+
+        &--bg1 {
+            /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#ffffff+30,f5f5f5+100 */
+            background: rgb(255,255,255); /* Old browsers */
+            background: -moz-linear-gradient(45deg,  rgba(255,255,255,1) 30%, rgba(245,245,245,1) 100%); /* FF3.6-15 */
+            background: -webkit-linear-gradient(45deg,  rgba(255,255,255,1) 30%,rgba(245,245,245,1) 100%); /* Chrome10-25,Safari5.1-6 */
+            background: linear-gradient(45deg,  rgba(255,255,255,1) 30%,rgba(245,245,245,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f5f5f5',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+        }
+
+        &--bg2 {
+            /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#f5f5f5+0,ffffff+70 */
+            background: rgb(245,245,245); /* Old browsers */
+            background: -moz-linear-gradient(45deg,  rgba(245,245,245,1) 0%, rgba(255,255,255,1) 70%); /* FF3.6-15 */
+            background: -webkit-linear-gradient(45deg,  rgba(245,245,245,1) 0%,rgba(255,255,255,1) 70%); /* Chrome10-25,Safari5.1-6 */
+            background: linear-gradient(45deg,  rgba(245,245,245,1) 0%,rgba(255,255,255,1) 70%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f5f5f5', endColorstr='#ffffff',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+        }
+    }
+    &__title {
+        display: block;
+        color: #14204f;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+}
+
+// User List
+.user-list {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+    user-select: none;
+    &__item {
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        position: relative;
+        margin-bottom: 25px;
+    }
+    &__link {
+        width: 80px;
+        &::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+        }
+    }
+    &__info {
+        max-width: calc(100% - 140px);
+    }
+    &__name {
+        display: block;
+        font-weight: bold;
+        line-height: 1.2;
+        font-size: 16px;
+        user-select: none;
+        color: $textcolor;
+        &--lg {
+            font-size: 18px;
+        }
+    }
+    &__img {
+        float: left;
+        height: 60px;
+        min-width: 60px;
+        width: 60px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin-right: 20px;
+        user-select: none;
+        &--sm {
+            height: 45px;
+            width: 45px;
+            min-width: 45px;
+            margin-right: 15px;
+        }
+    }
+    &__text {
+        display: block;
+        max-width: 190px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 15px;
+        color: #42444f;
+    }
+    &__time {
+        color: #b8b8b8;
+        font-size: 13px;
+        // white-space: nowrap;
+        margin-left: auto;
+        // padding-left: 20px;
+        min-width: 60px;
+        text-align: right;
+        // flex: 0 0 120px;
+        // max-width: 120px;
+    }
+}
+
+// Chat msg
+.chat-msg {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+
+    &__item {
+        max-width: 84%;
+        margin-bottom: 25px;
+        padding: 20px;
+        background: #edf0fc;
+        border-radius: 8px 8px 8px 0;
+        color: #42444f;
+
+        &--out {
+            align-self: flex-end;
+            /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#3359e1+0,4d6ee4+100 */
+            background: rgb(51,89,225); /* Old browsers */
+            background: -moz-linear-gradient(45deg,  rgba(51,89,225,1) 0%, rgba(77,110,228,1) 100%); /* FF3.6-15 */
+            background: -webkit-linear-gradient(45deg,  rgba(51,89,225,1) 0%,rgba(77,110,228,1) 100%); /* Chrome10-25,Safari5.1-6 */
+            background: linear-gradient(45deg,  rgba(51,89,225,1) 0%,rgba(77,110,228,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3359e1', endColorstr='#4d6ee4',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+            border-radius: 8px 8px 0 8px;
+            color: #fff;
+        }
+    }
+}
+
+.type-msg {
+    display: flex;
+    background-color: #fff;
+    border: 2px solid #e0e0e0;
+    border-radius: 50px;
+    padding: 6px;
+    overflow: hidden;
+    margin-bottom: 20px;
+
+    &__input {
+        background-color: transparent;
+        border: none;
+        width: calc(100% - 64px);
+        padding-left: 22px;
+        padding-right: 8px;
+        color: #333;
+
+        &::placeholder {
+            color: rgba(#909193, .6);
+        }
+    }
+    &__submit {
+        width: 64px;
+        height: 44px;
+        border: none;
+        border-radius: 50px;
+        overflow: hidden;
+        color: #fff;
+        background-color: #395ee2;
+        text-align: center;
+        > svg {
+            position: relative;
+            left: 2px;
+        }
+    }
+}
+
+// Message form
+.message-form {
+    min-height: calc(100vh - 284px);
+    display: flex;
+    flex-direction: column;
+    &__text {
+        background: #fff;
+        border: 1px solid #c4c6c7;
+        border-radius: 8px;
+        color: #333;
+        width: 100%;
+        height: 275px;
+        padding: 15px 20px;
+        resize: none;
+        margin-bottom: 15px;
+
+        &::placeholder {
+            color: #909193;
+        }
+    }
+    &__submit {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: auto;
+        // position: fixed;
+        // bottom: 20px;
+        // left: 50%;
+        // transform: translateX(-50%);
+    }
+}
+
+// Invite Friends form
+.invite-friends-form {
+  background-color: #0023a1;
+  border: 1px dashed #718ced;
+  border-radius: 50px;
+  box-shadow: 0 20px 35px rgba(#0b1f69, .3);
+  padding: 5px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: space-between;
+
+  input {
+    background-color: #0023a1;
+    border: none;
+    width: 100%;
+    padding: 5px 12px;
+    margin-right: 3px;
+    color: rgba(255,255,255,.6);
+  }
+  &__act {
+    text-transform: uppercase;
+    font-weight: bold;
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+// Invite Friends text
+.invite-friends-text {
+  font-size: 16px;
+  line-height: 1.2;
+  padding-top: 300px;
+
+  &__title {
+    font-size: 30px;
+    font-weight: 900;
+    margin-bottom: 15px;
+  }
+}
+
+// Interests
+.interests {
+  background-color: #fff;
+  border-radius: 15px 15px 0 0;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 99;
+  padding: 25px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  max-height: 65%;
+  transform: translateY(100%);
+  transition: transform .5s;
+
+  &.show {
+    transform: translateY(0);
+  }
+
+  &__title {
+    font-size: 15px;
+    margin-bottom: 0;
+  }
+
+  &__btn {
+    max-width: 67px;
+  }
+
+  hr {
+    background-color: #ececec;
+    height: 1px;
+    border: none;
+    margin-top: 12px;
+  }
+}
+
+// Interests list
+.interests-list {
+  margin-top: 15px;
+  margin-bottom: 8px;
+  &__title {
+    font-size: 15px;
+    font-weight: bold;
+    color: #14204f;
+    margin-bottom: 10px;
+  }
+  &__item {
+    margin-bottom: 10px;
+  }
+}
+
+// Matched For
+.matched-for {
+  text-align: center;
+  &__title {
+    font-size: 24px;
+  }
+  &__images {
+    position: relative;
+    height: 260px;
+    padding-top: 35px;
+    margin-bottom: 31px;
+  }
+  &__img {
+    position: absolute;
+    height: 200px;
+    border-radius: 10px;
+    box-shadow: 0 20px 30px rgba(0,0,0,.06);
+    &--left {
+      right: 50%;
+      transform: rotate(-10deg) translateX(16px);
+      z-index: 1;
+    }
+    &--right {
+      margin-top: 18px;
+      left: 50%;
+      transform: rotate(10deg) translateX(-4px);
+    }
+  }
+  &__icon {
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#e43064+0,e52e24+100 */
+    background: rgb(228,48,100); /* Old browsers */
+    background: -moz-linear-gradient(45deg,  rgba(228,48,100,1) 0%, rgba(229,46,36,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(45deg,  rgba(228,48,100,1) 0%,rgba(229,46,36,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(45deg,  rgba(228,48,100,1) 0%,rgba(229,46,36,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e43064', endColorstr='#e52e24',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+
+    border-radius: 50%;
+    border: 3px solid #fff;
+    box-shadow: 0 10px 10px rgba(0,0,0,.1);
+    width: 96px;
+    height: 88px;
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-40%);
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &--yellow {
+      /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#f19919+0,e1be13+100 */
+      background: rgb(241,153,25); /* Old browsers */
+      background: -moz-linear-gradient(45deg,  rgba(241,153,25,1) 0%, rgba(225,190,19,1) 100%); /* FF3.6-15 */
+      background: -webkit-linear-gradient(45deg,  rgba(241,153,25,1) 0%,rgba(225,190,19,1) 100%); /* Chrome10-25,Safari5.1-6 */
+      background: linear-gradient(45deg,  rgba(241,153,25,1) 0%,rgba(225,190,19,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f19919', endColorstr='#e1be13',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+    }
+  }
+}
+
+/// LAYOUT ///
+
+// Navigation
+.navigation {
+    // background: #3359e1;
+    color: #fff;
+    position: absolute;
+    z-index: 50;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    display: flex;
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform $navigation-time;
+    @include media-breakpoint-down(md) {
+        @at-root body.toggle & {
+            transform: translateX(0);
+        }
+    }
+    &__inner {
+        width: $navigation-width;
+        padding-top: 30px;
+        padding-bottom: 30px;
+        margin-top: auto;
+        margin-bottom: auto;
+    }
+    .user__avatar {
+        height: 103px;
+        width: 103px;
+    }
+    &__menu {
+        display: block;
+        position: relative;
+        padding-top: 15px;
+        &::before {
+            position: absolute;
+            content: "";
+            display: block;
+            height: 2px;
+            top: 0;
+            left: 15px;
+            right: 15px;
+            background-color: #5676e7;
+            border-top: 1px solid #2b4dc9;
+        }
+        > li {
+            margin-right: 0;
+        }
+        > li:last-child {
+            margin-top: 40px;
+        }
+        > li > a {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            color: #fff;
+            font-size: 16px;
+            transition: opacity .3s;
+            &:hover {
+                opacity: .8;
+            }
+            > svg {
+                margin-right: 10px;
+                width: 25px;
+            }
+        }
+    }
+}
+
+// Header
+.header {
+    box-shadow: 0 5px 30px rgba(black, .08);
+    margin-bottom: 30px;
+
+    &--fixed-top {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: white;
+    }
+
+    &--no-shadow {
+      box-shadow: none;
+      margin-bottom: 5px;
+    }
+
+    &--invite-friends {
+      position: relative;
+      min-height: 528px;
+      text-align: center;
+      color: #fff;
+      /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#3359e1+0,4d6ee4+100 */
+      background: rgb(51,89,225); /* Old browsers */
+      background: -moz-linear-gradient(top,  rgba(51,89,225,1) 0%, rgba(77,110,228,1) 100%); /* FF3.6-15 */
+      background: -webkit-linear-gradient(top,  rgba(51,89,225,1) 0%,rgba(77,110,228,1) 100%); /* Chrome10-25,Safari5.1-6 */
+      background: linear-gradient(to bottom,  rgba(51,89,225,1) 0%,rgba(77,110,228,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+      filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3359e1', endColorstr='#4d6ee4',GradientType=0 ); /* IE6-9 */
+
+      &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        background-image: url('../images/dest/invite-friends.png');
+        background-repeat: no-repeat;
+        background-position: center center;
+      }
+
+      svg path {
+        fill: #fff;
+      }
+
+      .logo, .logo:active, .logo:focus, .logo:hover,
+      .header-nav li a {
+        color: #fff;
+      }
+
+      .header-nav li.active a,
+      .header-nav li a:hover {
+        color: #87a1ff;
+      }
+    }
+
+    > .container > .row {
+        min-height: 68px;
+    }
+
+    &__toggle {
+        display: flex;
+        height: 68px;
+        align-items: center;
+        width: 34px;
+    }
+
+    &__swipes {
+        margin-right: 15px;
+    }
+}
+
+.header-nav {
+    flex-wrap: wrap;
+    font-size: 15px;
+    font-weight: 500;
+    @include media-breakpoint-up(sm) {
+        justify-content: space-around;
+    }
+
+    li {
+        width: 100%;
+        @include media-breakpoint-up(sm) {
+            width: auto;
+        }
+        a {
+            display: inline-block;
+            padding: 9px 0;
+            @include media-breakpoint-up(sm) {
+                padding: 29px 0;
+            }
+            &:hover {
+                color: #4c6de4;
+            }
+        }
+
+        &.active a {
+            color: #4c6de4;
+        }
+    }
+}
+
+.header-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    width: 48px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-left: 15px;
+
+    &__img {
+        max-width: 72px;
+    }
+}
+
+.content {
+    padding-bottom: 40px;
+}
+
+// Footer
+.footer {
+    background-color: #fcfcfc;
+    // margin-top: auto;
+    padding-top: 24.5px;
+    padding-bottom: 24.5px;
+}
+
+.footer-nav {
+    display: flex;
+}
+
+
+/// LOGIN PAGE ///
+.login-page {
+    overflow: hidden;
+    color: #5c6167;
+    font-size: 16px;
+    line-height: 1;
+    background-color: #fff;
+
+    > .container {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    &__balloons {
+        height: 197px;
+        margin-top: -45px;
+
+        > img {
+            // max-height: 125px;
+
+            &:nth-child(1) {
+                transform: translate(-22px,-8px);
+                width: 111px;
+                // height: 125px;
+            }
+            &:nth-child(2) {
+                transform: translate(43px,-32px) scaleX(-1) rotate(-7deg);
+                width: 101px;
+                // height: 99px;
+            }
+            &:nth-child(3) {
+                transform: translate(54px,15px) rotate(27deg);
+                width: 170px;
+            }
+        }
+    }
+
+    &__title {
+        font-size: 22px;
+        font-weight: 700;
+        color: $textcolor;
+        margin-top: 6px;
+    }
+
+    // &__text {}
+
+    &__cta {
+        background-color: #5960ff;
+        border-color: #5960ff;
+        margin-top: 10px;
+        margin-bottom: 20px;
+        padding-top: 18px;
+        padding-bottom: 18px;
+        width: 314px;
+        box-shadow: 0 10px 20px rgba(#3b42ee, .2);
+
+        > svg {
+            margin-right: 8px;
+        }
+    }
+
+    &__bg {
+        margin-top: auto;
+        max-width: 380px;
+    }
+}
+
+/// ENTER PAGE ///
+.enter-page {
+    $progress-height: 10px;
+
+    padding-bottom: $progress-height;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100vh;
+    background: #fff;
+
+    &__header {
+        background-color: #4d6ee4;
+        /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#3359e1+0,4d6ee4+100 */
+        background: rgb(51,89,225); /* Old browsers */
+        background: -moz-linear-gradient(top,  rgba(51,89,225,1) 0%, rgba(77,110,228,1) 100%); /* FF3.6-15 */
+        background: -webkit-linear-gradient(top,  rgba(51,89,225,1) 0%,rgba(77,110,228,1) 100%); /* Chrome10-25,Safari5.1-6 */
+        background: linear-gradient(to bottom,  rgba(51,89,225,1) 0%,rgba(77,110,228,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#3359e1', endColorstr='#4d6ee4',GradientType=0 ); /* IE6-9 */
+        color: #fff;
+        padding-bottom: 35px;
+        padding-top: 52px;
+        position: relative;
+
+        @include media-breakpoint-only(xs) {
+            font-size: 13px;
+        }
+
+        @include media-breakpoint-up(sm) {
+            padding-top: 70px;
+            padding-bottom: 50px;
+        }
+
+        &::after {
+            content: "";
+            position: absolute;
+            right: 0;
+            top: 15px;
+            height: 166px;
+            width: 122px;
+            background-image: url(../images/dest/heart-shape.png);
+            background-repeat: no-repeat;
+            opacity: .07;
+            pointer-events: none;
+        }
+    }
+    &__back {
+        display: inline-block;
+        font-size: 15px;
+        font-weight: 500;
+        margin-bottom: 20px;
+
+        &,
+        &:hover,
+        &:focus,
+        &:active {
+            color: #fff;
+            transition: opacity .3s;
+        }
+
+        &:hover,
+        &:focus,
+        &:active {
+            opacity: .8;
+        }
+
+        > svg {
+            margin-right: 5px;
+        }
+    }
+    &__subtitle {
+        font-size: 24px;
+        line-height: 1.1;
+    }
+    &__title {
+        font-size: 30px;
+        font-weight: 900;
+        margin-bottom: 10px;
+    }
+    &__smalltitle {
+        text-transform: uppercase;
+        font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+    &__field {
+        display: flex;
+        justify-content: space-between;
+        background-color: #0023a1;
+        box-shadow: 0 20px 35px rgba(#0b1f69, .3);
+        margin-top: 30px;
+        padding: 8px;
+        border-radius: 50px;
+
+        input {
+            width: calc(100% - 100px);
+            color: #fff;
+            background-color: #0023a1;
+            border: none;
+            padding-left: 22px;
+            padding-bottom: 10px;
+            padding-top: 10px;
+        }
+
+        button {
+            background-color: #395ee2;
+            border-color: #395ee2;
+            text-transform: uppercase;
+            font-weight: 700;
+            width: 74px;
+        }
+    }
+    &__next-btn {
+        display: block;
+        font-weight: 700;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 30px;
+
+        @include media-breakpoint-up(lg) {
+            margin-bottom: 60px;
+        }
+    }
+    &__content {
+        padding-bottom: 20px;
+        padding-top: 20px;
+        margin-bottom: auto;
+
+        &--center {
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+    }
+    &__placeholder {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        color: #909193;
+        line-height: 1.4;
+        font-weight: 300;
+
+        > svg {
+            margin-bottom: 20px;
+        }
+    }
+    &__tags {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+
+        .tag {
+            margin-right: 7px;
+            margin-bottom: 7px;
+
+            [data-role="remove"] {
+                background: url('../images/dest/close.svg') no-repeat;
+                display: inline-block;
+                width: 10px;
+                height: 10px;
+                text-indent: -99999px;
+                margin-left: 8px;
+                cursor: pointer;
+                transform: translateY(1.5px);
+            }
+        }
+    }
+    &__progress {
+        height: $progress-height;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+    }
+}
+
+/// YOU HAVE DONE PAGE ///
+.yhd-page {
+    color: #5c6167;
+    background: #fff;
+    &__wrap {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 100vh;
+    }
+    &__info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: auto;
+        margin-bottom: auto;
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
+    &__cta {
+        display: block;
+        margin: 0 auto 30px;
+        font-weight: bold;
+    }
+}
+
+/// SWIPE PAGE ///
+.swipe-page {
+    $bg-color: #030404;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    background-color: $bg-color;
+    color: #fff;
+    min-height: 100vh;
+    text-align: center;
+    padding: 30px 0;
+    overflow: hidden;
+    &::before {
+        content: "";
+        background-color: $bg-color;
+        position: fixed;
+        z-index: -1;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+    // &::after {
+    //     content: "";
+    //     position: fixed;
+    //     width: 1px;
+    //     height: 100%;
+    //     background: red;
+    //     top: 0;
+    // }
+    &__top {
+        max-width: 270px;
+        margin-top: auto;
+        > svg {
+            transform: translateX(29px);
+            margin-bottom: 20px;
+        }
+        p {
+            max-width: 220px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        &--left {
+            > svg {
+                transform: translateX(-29px);
+            }
+        }
+        > svg.right-100 {
+            transform: translateX(49px);
+        }
+        > svg.left-100 {
+            transform: translateX(-49px);
+        }
+    }
+    &__next-btn {
+        display: block;
+        margin-top: auto;
+        min-width: 109px;
+        width: auto;
+        max-width: 100%;
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+}
+
+/// USER PAGE ///
+.user-page {
+    margin-top: auto;
+    margin-bottom: auto;
+    &__info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: auto;
+        margin-bottom: auto;
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
+    &__link {
+        display: inline-block;
+        margin-top: 20px;
+        text-transform: uppercase;
+        font-weight: 500;
+        color: #3359e1;
+        &:hover {
+            color: lighten(#3359e1, 10%);
+        }
+    }
+}
+
+/// CHAT PAGE ///
+.chat-page {
+    padding-top: 98px;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-end;
+    &__close {
+        font-size: 35px;
+        color: #42444f;
+        font-family: auto;
+    }
+    &__msgs {
+        padding-bottom: 80px;
+    }
+    &__form {
+        position: fixed;
+        bottom: 0;
+        left: 15px;
+        right: 15px;
+        background: #fff;
+        padding-top: 1px;
+        @include media-breakpoint-only(xs) {
+            padding-left: 0;
+            padding-right: 0;
+            width: auto;
+        }
+    }
+}
+
+/// MESSAGE PAGE ///
+.message-page {
+    margin-bottom: 20px;
+}
+
+.message-header {
+    &__img {
+        height: 130px;
+        width: 130px;
+        @media (min-width: 375px) {
+            height: 150px;
+            width: 150px;
+        }
+    }
+    &__text {
+        color: #42444f;
+    }
+    &__title {
+        line-height: 1.2;
+        font-size: 15px;
+        margin-bottom: 15px;
+        margin-top: 10px;
+    }
+    &__subtitle {
+        font-size: 13px;
+        color: #5c6167;
+    }
+}
+
+/// MATCHING PAGE ///
+.matching-page {
+  &__img {
+    border-radius: 10px;
+    overflow: hidden;
+    display: block;
+    box-shadow: 0 10px 25px rgba(0,0,0,.1);
+    width: 100%;
+    @include media-breakpoint-up(sm) {
+      width: auto;
+    }
+  }
+  &__title {
+    margin-top: 18px;
+    font-size: 20px;
+  }
+  &__subtitle {
+    display: block;
+    color: #14204f;
+    font-size: 15px;
+    margin-bottom: 15px;
+  }
+}
+
+/// MATCHING INTERMEDIATE ///
+.matching-intermediate {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #fff;
+
+  > .container > .row {
+    min-height: 100vh;
+    padding-bottom: 20px;
+  }
+}
+
+/// INVITE FRIENDS ///
+.invite-friends {
+  color: #4c6de4;
+  font-size: 18px;
+  line-height: 1.1;
+  text-align: center;
+  min-height: 285px;
+  height: calc(100vh - 558px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 40px;
+  &__num {
+    font-size: 30px;
+    font-weight: bold;
+  }
+}

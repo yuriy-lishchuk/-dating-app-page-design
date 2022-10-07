@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+	<meta charset="utf-8">
+	<title>Favourite Movies or Shows | FRIENDLY</title>
+	<meta name="description" content="FRIENDLY - Just friends OR friends with benefits">
+	<meta name="viewport" content="width=device-width">
+	<link rel="icon" href="images/favicon.png">
+	<meta property="og:image" content="images/dest/preview.jpg">
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="css/app.min.css">
+
+</head>
+
+<body>
+
+	<div class="enter-page">
+		<header class="enter-page__header">
+			<div class="container">
+				<div class="enter-page__subtitle">Enter your favorite</div>
+				<h2 class="enter-page__title">Movies or Shows</h2>
+				<p>
+					<b>Suggestions</b> : Inception, The Avengers, 300,
+					Titanic, Gladiator, The Lord of The Ring
+				</p>
+				<form action="javascript:void(0)" method="POST">
+					<div class="enter-page__field">
+						<input type="text" placeholder="Enter movie name" required>
+						<button type="submit" class="btn btn-blue btn-xs">Add</button>
+					</div>
+				</form>
+			</div>
+		</header>
+		<div class="enter-page__content">
+			<div class="container">
+				<h5 class="enter-page__smalltitle">Favorite movies</h5>
+				<ul class="enter-page__tags">
+					<li class="tag label label-default">
+						The Avengers
+						<a href="javascript:void(0)" data-role="remove">×</a>
+					</li>
+					<li class="tag label label-default">
+						Final Destinations
+						<a href="javascript:void(0)" data-role="remove">×</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<div class="container">
+			<a href="javascript:void(0)" class="enter-page__next-btn btn btn-blue disabled" role="button" aria-disabled="true">Next</a>
+		</div>
+		<div class="enter-page__progress">
+			<div class="progress">
+			  <div class="progress-bar" role="progressbar" style="width: 0" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+			</div>
+		</div>
+	</div>
+
+	<script src="js/app.min.js"></script>
+
+</body>
+</html>
